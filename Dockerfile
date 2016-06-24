@@ -1,7 +1,7 @@
 FROM alpine:3.4
 RUN set -x \
   && apk add --no-cache \
-    git  openjdk7-jre-base ruby-dev=2.3.1-r0 ruby=2.3.1-r0 nodejs-lts python make g++ ghostscript-fonts graphviz bash sudo python make g++
+    git  openjdk7-jre-base ruby-dev=2.3.1-r0 ruby=2.3.1-r0 nodejs-lts python make g++ ghostscript-fonts graphviz bash sudo
 ARG VERSION
 RUN npm install -g yaktor@${VERSION:-'latest'} || echo "wait"
 
