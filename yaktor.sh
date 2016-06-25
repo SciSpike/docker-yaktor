@@ -18,15 +18,15 @@ if [ ! $APP_UID == $FILE_OWNER_UID ]; then
     chown -R yaktor /home/yaktor
     #do stuff as $USER
     exec su - $USER <<LOE
-      #go backto $PWD
+      #go back to $PWD
       cd $PWD
-      #do what every I say with my terminal
+      #do what ever I say with my terminal
       . ~/.env
       . ~/.profile
       exec ${@-bash} <$term
 LOE
 EOL
-  
-fi
+  fi
+
 . ~/.profile
 exec ${@-bash}
