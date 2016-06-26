@@ -14,12 +14,12 @@ RUN set -x \
     bash \
     sudo
 
-ARG VERSION="0.2"
-RUN npm install -g yaktor@${VERSION:-'latest'} || echo "wait"
-
 RUN /usr/bin/gem install -N \
   asciidoctor-diagram \
   json
+  
+ARG VERSION="0.2"
+RUN npm install -g yaktor@${VERSION:-'latest'} || echo "wait"
 
 # app & user specifics
 RUN adduser -D -u 1000 yaktor
