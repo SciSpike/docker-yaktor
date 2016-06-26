@@ -14,7 +14,7 @@ RUN set -x \
     bash \
     sudo
 
-ARG VERSION
+ARG VERSION="0.2"
 RUN npm install -g yaktor@${VERSION:-'latest'} || echo "wait"
 
 RUN /usr/bin/gem install -N \
