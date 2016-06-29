@@ -18,7 +18,7 @@ RUN /usr/bin/gem install -N \
   asciidoctor-diagram \
   json
   
-ARG VERSION="0.2.1"
+ARG VERSION="0.3.0"
 RUN npm install -g yaktor@${VERSION:-'latest'} || echo "wait"
 
 # app & user specifics
