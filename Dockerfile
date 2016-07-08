@@ -15,7 +15,7 @@ RUN set -x \
     sudo
 
 ARG VERSION
-RUN npm install -g yaktor@${VERSION:-'latest'} || echo "wait"
+RUN npm install -g yaktor@${VERSION:-'latest'}
 
 RUN /usr/bin/gem install -N \
   asciidoctor-diagram \
