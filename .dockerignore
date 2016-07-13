@@ -1,3 +1,5 @@
 .gitignore
 .project
+.classpath
+.idea
 *.log

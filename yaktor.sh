@@ -3,7 +3,7 @@
 # Ensures current user is the owner of /app's files
 APP_UID=$(id -u)
 term=/dev/console
-FILE_OWNER_UID=$(stat -c '%u' .)
+FILE_OWNER_UID=$(stat -c '%u' /app)
 USER=$(id -un)
 if [ ! $APP_UID == $FILE_OWNER_UID ]; then
   env | awk '{print "export " $0}' >> ~/.env
@@ -11,11 +11,11 @@ if [ ! $APP_UID == $FILE_OWNER_UID ]; then
   #do stuff as root
   exec sudo su <<EOL
     #change user id
-    sed -i.b s/yaktor:x:$APP_UID/yaktor:x:$FILE_OWNER_UID/g /etc/passwd
+    sed -i.b s/node:x:$APP_UID/node:x:$FILE_OWNER_UID/g /etc/passwd
     #give me back my terminal or give me null
-    ls $term && chown yaktor $term || ln -s /dev/null $term
+    ls $term && chown node $term || ln -s /dev/null $term
     #give me back my home
-    chown -R yaktor /home/yaktor
+    chown -R node /home/node
     #do stuff as $USER
     exec su - $USER <<LOE
       #go back to $PWD
@@ -26,7 +26,7 @@ if [ ! $APP_UID == $FILE_OWNER_UID ]; then
       exec ${@-bash} <$term
 LOE
 EOL
-  fi
+fi
 
 . ~/.profile
 exec ${@-bash}

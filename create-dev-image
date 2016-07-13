@@ -1,0 +1,32 @@
+#!/usr/bin/env bash -e
+
+# NOTE: This file creates a Docker image based on a local yaktor source
+# directory.  The image it creates is NOT intended to be published or
+# used anywhere other than the machine of a developer of yaktor itself!
+
+if [ -z "$1" ]; then
+  echo "usage: $0 <pathToLocalYaktorDir> [docker build args without \"PATH | URL | -\" ...]"
+  exit 1
+fi
+if [ ! -d "$1" ]; then
+  echo "not a directory:  $1"
+  exit 2
+fi
+
+YAKDIR="${YAKDIR:-.yaktor}"
+rsync -a \
+  --exclude .git \
+  --exclude .idea \
+  --exclude .project \
+  --exclude .classpath \
+  "${1%/}/" "$YAKDIR" # trailing slash means to copy the *contents* of $1 to $YAKDIR
+
+shift
+
+if [ -z "$*" ]; then
+  ARGS="-t yaktor/yaktor:dev"
+else
+  ARGS="$*"
+fi
+
+docker build --file Dockerfile.dev $ARGS .

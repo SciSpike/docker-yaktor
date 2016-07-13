@@ -1,0 +1,35 @@
+FROM yaktor/base:latest
+
+# NOTE: The image created by this file is not intended to be published.
+
+# It is only for use by developers of yaktor itself who have local changes to
+# yaktor that need to be tested from a Docker container.  This Dockerfile is
+# intended to be used from the script ./create-dev-image.  See that file for
+# more info.
+
+MAINTAINER yaktor@scispike.com
+
+USER root
+
+ARG YAKDIR_DST=/.yaktor
+ARG YAKDIR_SRC=.yaktor
+COPY ${YAKDIR_SRC} ${YAKDIR_DST}
+WORKDIR ${YAKDIR_DST}
+
+# Optimization:
+# If ${YAKDIR_DST}/node_modules exists, we assume only an `npm rebuild` is
+# needed, else we do an `npm install`.  This means that you should
+# `npm install` on the host machine before creating this Docker image!
+RUN \
+  if [ -d "${YAKDIR_DST}/node_modules" ]; then \
+    npm rebuild; \
+  else \
+    npm install; \
+  fi
+# TODO: test to see whether line 27 is required
+
+# now install yaktor globally from the local directory
+RUN npm install -g ${YAKDIR_DST}
+
+WORKDIR /app
+USER node
