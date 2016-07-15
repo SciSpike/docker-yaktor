@@ -9,6 +9,14 @@ module.exports = function (grunt) {
   var semver = require('semver')
   var exec = require('child_process').exec
   var async = require('async')
+  var yaktorVersion = grunt.option('yaktor-version')
+  if (yaktorVersion === true) yaktorVersion = null
+  if (!yaktorVersion) {
+    var err = new Error('no target yaktor version given; argument --yaktor-version=<version> required')
+    grunt.log.error(err)
+    throw err
+  }
+
   var dir = null
   var basePath = grunt.option('basePath') || './'
   var packageJson = grunt.file.readJSON('package.json')
@@ -35,6 +43,7 @@ module.exports = function (grunt) {
     'shell:confirmNoModifiedFiles',
     'gitfetch:tags',
     'gitpull:origin',
+    'shell:syncDockerfile',
     'bump:minor',
     'gittag:patch',
     'gittag:minor',
@@ -56,6 +65,7 @@ module.exports = function (grunt) {
     'shell:confirmNoModifiedFiles',
     'gitfetch:tags',
     'gitpull:origin',
+    'shell:syncDockerfile',
     'bump:patch',
     'gittag:patch',
     'gittag:minor',
@@ -70,6 +80,7 @@ module.exports = function (grunt) {
     'shell:confirmNoUntrackedFiles',
     'shell:confirmNoModifiedFiles',
     'gitpull:origin',
+    'shell:syncDockerfile',
     'gittag:pre',
     'bump:prerelease',
     'gitpush:current',
@@ -130,6 +141,13 @@ module.exports = function (grunt) {
       },
       confirmNoModifiedFiles: {
         command: 'git diff --cached --exit-code --no-patch'
+      },
+      syncDockerfile: {
+        command: [
+          'sed -i~ -E \'s/yaktor@[0-9]+\\.[0-9]+\\.[0-9]+(\\-pre\\.[0-9]+)?/yaktor@' + yaktorVersion + '/g\'' + ' Dockerfile',
+          'rm Dockerfile~',
+          'echo git commit -o -m "sync Dockerfile to yaktor@' + yaktorVersion + '" -- Dockerfile'
+        ].join(' && ')
       }
     }
   }
