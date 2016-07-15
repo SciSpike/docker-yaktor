@@ -146,7 +146,7 @@ module.exports = function (grunt) {
         command: [
           'sed -i~ -E \'s/yaktor@[0-9]+\\.[0-9]+\\.[0-9]+(\\-pre\\.[0-9]+)?/yaktor@' + yaktorVersion + '/g\'' + ' Dockerfile',
           'rm Dockerfile~',
-          'git commit -o -m "sync Dockerfile to yaktor@' + yaktorVersion + '" -- Dockerfile'
+          'if [ -n "$(git status -s Dockerfile)" ]; then git commit -o -m "sync Dockerfile to yaktor@' + yaktorVersion + '" -- Dockerfile ; fi'
         ].join(' && ')
       }
     }
