@@ -1,4 +1,4 @@
-FROM yaktor/base:0.33.0
+FROM yaktor/base:0.34.0
 
 MAINTAINER yaktor@scispike.com
 
