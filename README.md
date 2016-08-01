@@ -1,4 +1,4 @@
-[![yaktor image](yaktor.png)](http://yaktor.io)
+[![yaktor image](http://yaktor.io/pics/yaktor-logo.png)](http://yaktor.io)
 
 
 # Docker Image
