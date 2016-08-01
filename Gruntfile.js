@@ -24,7 +24,6 @@ module.exports = function (grunt) {
   var major = versions[ 1 ]
   var minor = versions[ 2 ]
   var patch = versions[ 3 ]
-  var pre = versions[ 5 ]
   var preVersion = packageJson.version
   var patchVersion = [ major, minor, patch ].join('.')
   var minorVersion = [ major, minor ].join('.')
@@ -107,7 +106,7 @@ module.exports = function (grunt) {
     gitpush: {
       master: { options: { remote: origin, branch: master } },
       maintenance: { options: { remote: origin, branch: maintenanceBranch, upstream: true } },
-      current: { options: { remote: origin, } },
+      current: { options: { remote: origin } },
       preTag: { options: { remote: origin, branch: preTag } },
       patchTag: { options: { remote: origin, branch: patchTag } },
       minorTag: { options: { remote: origin, branch: minorTag, force: true } },
@@ -117,7 +116,7 @@ module.exports = function (grunt) {
       pre: { options: { tag: preTag } },
       patch: { options: { tag: patchTag } },
       minor: { options: { tag: minorTag, force: true } },
-      latest: { options: { tag: latestTag, force: true } },
+      latest: { options: { tag: latestTag, force: true } }
     },
     gitpull: {
       origin: { options: { remote: origin } }
@@ -131,13 +130,13 @@ module.exports = function (grunt) {
     },
     shell: {
       confirmOnMasterBranch: {
-        command: "[ $(git status | head -n 1 | awk '{ print $3 }') == '" + master + "' ]"
+        command: "test $(git status | head -n 1 | awk '{ print $3 }') = '" + master + "'"
       },
       confirmOnMaintenanceBranch: {
-        command: "[[ $(git status | head -n 1 | awk '{ print $3 }') =~ ^v[0-9]+\\.[0-9]+\\.x$ ]]"
+        command: "expr $(git status | head -n 1 | awk '{ print $3 }') : 'v[0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\.x$'"
       },
       confirmNoUntrackedFiles: {
-        command: '[ -z "$(git status -s)" ]'
+        command: 'test -z "$(git status -s)"'
       },
       confirmNoModifiedFiles: {
         command: 'git diff --cached --exit-code --no-patch'
@@ -181,7 +180,7 @@ module.exports = function (grunt) {
       grunt.log.writeln(cmd)
       exec(cmd, function (err, stdout) {
         stdout = '' + stdout.trim()
-        if (err && err.code == 128) {
+        if (err && err.code === 128) {
           grunt.log.writeln('no latest tag "' + latestTag + '" found')
           err = 'create'
         } else {
